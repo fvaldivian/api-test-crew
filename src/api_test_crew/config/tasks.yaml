@@ -1,0 +1,77 @@
+task_plan:
+  description: >
+    Tu misión es diseñar una suite de pruebas exhaustiva para el siguiente API {url}, usando su ficha técnica.
+    Considera lógica de negocio, validaciones de campo y edge cases.
+    Genera al menos 10 casos de prueba. Para cada caso indica:
+      - URL final (incluyendo path y query params)
+      - Método HTTP
+      - Parámetros y valores (válidos, límite, erróneos, omitidos, combinaciones)
+      - Objetivo del test: qué comportamiento se valida o se intenta romper
+      - Valor esperado: status code, body, cabeceras o contenido clave
+  expected_output: >
+    Lista de casos de prueba. Cada caso debe incluir:
+      - Descripción breve del test
+      - URL
+      - Método
+      - Parámetros usados
+      - Objetivo del test
+      - Valor esperado (status, datos clave, formato, etc.)
+  agent: strategist
+
+task_exec:
+  description: >
+    Recibe la lista de casos de prueba generada.
+    Para cada uno, ejecuta la petición HTTP usando el método, URL y parámetros especificados.
+    Registra:
+      - Status code recibido
+      - Headers de la respuesta
+      - Body completo
+      - Tiempo de respuesta (en ms)
+      - Fecha/hora de la ejecución
+      - Notas de error si la petición falla por timeout o red
+  expected_output: >
+    Lista de resultados de cada petición ejecutada, que incluya:
+      - ID o descripción breve del caso
+      - Status code
+      - Headers
+      - Body de la respuesta
+      - Tiempo de respuesta
+      - Fecha/hora
+      - Notas de error si aplica
+  agent: executor
+
+task_validate:
+  description: >
+    Recibe la lista de resultados de las ejecuciones.
+    Para cada caso, analiza si la respuesta cumple lo esperado:
+      - Status code correcto
+      - Body en el formato correcto
+      - Datos cumplen la lógica de negocio (ejemplo: fechas en rango, símbolos válidos, etc.)
+      - Headers importantes presentes
+      - Tiempo de respuesta razonable
+    Marca los casos que fallan y explica claramente el motivo y sugerencias de mejora.
+    Detecta patrones si varios casos fallan por el mismo motivo.
+  expected_output: >
+    Listado indicando para cada caso:
+      - ID o descripción breve
+      - Resultado: pasa/falla
+      - Motivo claro y conciso
+      - Sugerencia (si aplica)
+      - Indicación de patrones repetidos si se detectan
+  agent: validator
+
+task_report:
+  description: >
+    Recoge todos los resultados validados.
+    Resúmelos en un informe estructurado, incluyendo:
+      - Resumen ejecutivo: total de pruebas, % éxito, fallos críticos, recomendaciones generales
+      - Detalle técnico: explicación caso a caso, ejemplos de fallos, entradas y salidas relevantes
+      - Tabla resumen de todos los casos probados, su resultado y motivo
+      - Recomendaciones técnicas y funcionales para el equipo de desarrollo/API
+  expected_output: >
+    Informe compuesto por:
+      - Resumen ejecutivo (texto)
+      - Resumen técnico (texto)
+      - Tabla resumen de casos y resultados (ID, resultado, motivo)
+      - Lista de recomendaciones principales
+  agent: reporter
